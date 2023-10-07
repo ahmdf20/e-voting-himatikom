@@ -11,51 +11,30 @@
 
     <div class="p-12">
 
-        <button class="p-3 bg-green-400 hover:bg-green-500 rounded-md mb-4 shadow-xl" onclick="generateToken()">Tambah
-            Token</button>
+        <div class="my-4">
+            <button class="p-3 bg-green-400 hover:bg-green-500 rounded-md mb-4 shadow-xl" onclick="generateToken()">Tambah
+                Token</button>
 
-        <div class="relative overflow-x-auto shadow-md sm:rounded-lg mb-4">
-            <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                        <th scope="col" class="px-6 py-3">
-                            #
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Token
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Terpakai
-                        </th>
-                        <th scope="col" class="px-6 py-3">
-                            Action
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($tokens as $key => $token)
-                        <tr class="bg-white border-b dark:bg-gray-900 dark:border-gray-700">
-                            <th scope="row"
-                                class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                {{ $token->id }}
-                            </th>
-                            <td class="px-6 py-4">
-                                {{ $token->token }}
-                            </td>
-                            <td class="px-6 py-4">
-                                {{ $token->is_used == 0 ? 'Tidak' : 'Ya' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <a href="#"
-                                    class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
+            <h4 class="float-right">Total token : {{ count($tokens) }}</h4>
         </div>
 
-        {{ $tokens->links() }}
+        <div class="flex flex-wrap gap-4 justify-center">
+            @if (count($tokens) < 0)
+            @endif
+
+            @foreach ($tokens as $key => $token)
+                <a href="#" onclick="handleDelete({{ $token->id }})"
+                    class="block max-w-sm p-3 w-[12rem] h-[6rem] bg-white border border-gray-200 rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                    <h5 class="mb-2 text-center text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+                        {{ $token->token }}</h5>
+                    <p class="text-center">{{ $token->is_used == 1 ? 'Terpakai' : 'Belum Terpakai' }}</p>
+                </a>
+            @endforeach
+        </div>
+
+
+
+        {{-- {{ $tokens->links() }} --}}
 
 
     </div>
@@ -70,6 +49,39 @@
                 })
             }
         })
+
+        function handleDelete(x) {
+            Swal.fire({
+                icon: 'question',
+                title: 'Menghapus token',
+                text: 'Apakah anda yakin ingin menghapus token ini?',
+                showCancelButton: true,
+                confirmButtonText: 'Hapus!',
+                confirmButtonColor: '#d33',
+            }).then((res) => {
+                if (res.isConfirmed) {
+                    $.ajax({
+                        url: `/access-token/delete/${x}`,
+                        method: "GET",
+                        success: function(result) {
+                            Swal.fire({
+                                icon: result.icon,
+                                title: 'Hapus Token',
+                                text: result.message
+                            }).then((res) => {
+                                if (res.isConfirmed) location.reload()
+                            })
+                        },
+                        error: function(err) {
+                            console.log(err)
+                        }
+                    })
+                }
+            })
+
+
+
+        }
 
         function generateToken() {
             Swal.fire({

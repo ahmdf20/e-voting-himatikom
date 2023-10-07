@@ -12,8 +12,14 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="shortcut icon" href="{{ asset('image/logo-himatikom.png') }}" type="image/x-icon">
+
     <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- <script src="{{ asset('build/assets/app-540823bc.js') }}"></script>
+    <link rel="stylesheet" href="{{ asset('build/assets/app-55bf8dae.css') }}"> --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 
     {{-- JQuery --}}
@@ -31,6 +37,7 @@
                     {{ $vote->event_name }}
                 </h3>
                 <div class="flex flex-wrap gap-4 justify-center">
+                    <input type="hidden" name="token" id="token">
                     @foreach ($vote->subvote as $key => $sb)
                         <div
                             class="max-h-sm max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
@@ -67,9 +74,6 @@
             Swal.fire({
                 title: 'Harap Masukkan token sebelum memilih',
                 input: 'text',
-                inputAttribute: {
-                    autocapitalize: 'off',
-                },
                 showCancelButton: false,
                 confirmButtonText: 'Submit',
                 confirmButtonColor: '#1fcf00',
@@ -83,11 +87,27 @@
                             token: req
                         },
                         success: function(result) {
-                            Swal.fire(
-                                'Check Token',
-                                `${result.message}`,
-                                'success',
-                            )
+                            if (result.icon == 'error') {
+                                Swal.fire({
+                                    icon: result.icon,
+                                    title: 'Check Token Gagal',
+                                    text: result.message,
+                                    confirmButtonText: 'Ulangi',
+                                    confirmButtonColor: '#26c733',
+                                    allowOutsideClick: false
+                                }).then((res) => {
+                                    if (res.isConfirmed) {
+                                        document.location.reload()
+                                    }
+                                })
+                            } else {
+                                Swal.fire(
+                                    'Check Token Berhasil',
+                                    `${result.message}`,
+                                    `${result.icon}`
+                                )
+                                $('#token').val(result.token)
+                            }
                         },
                         error: function(err) {
                             console.log(err)
@@ -98,28 +118,40 @@
         })
 
         function pilihPaslon(x, y) {
-            $.ajax({
-                url: `/subvote/vote/${x}`,
-                method: "POST",
-                data: {
-                    _token: `{{ csrf_token() }}`,
-                    candidate_id: y,
-                },
-                success: function(result) {
-                    Swal.fire(
-                        'Pemilihan Kahim & Wakahim',
-                        `${result.message}`,
-                        'success'
-                    ).then((res) => {
-                        if (res.isConfirmed) {
-                            location.reload()
-                        }
-                    })
-                },
-                error: function(err) {
-                    console.log(err)
-                }
-            })
+            let token = $('#token').val()
+            console.log(token)
+            if (!token) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Kesalahan pemilihan!',
+                    text: 'Anda tidak dapat memilih jika belum menginputkan token!',
+                }).then((res) => {
+                    if (res.isConfirmed) location.reload()
+                })
+            } else {
+                $.ajax({
+                    url: `/subvote/vote/${x}`,
+                    method: "POST",
+                    data: {
+                        _token: `{{ csrf_token() }}`,
+                        candidate_id: y,
+                    },
+                    success: function(result) {
+                        Swal.fire({
+                            icon: `success`,
+                            title: 'Pemilihan Kahim & Wakahim',
+                            text: result.message
+                        }).then((res) => {
+                            if (res.isConfirmed) {
+                                location.reload()
+                            }
+                        })
+                    },
+                    error: function(err) {
+                        console.log(err)
+                    }
+                })
+            }
         }
     </script>
 </body>

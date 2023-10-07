@@ -11,7 +11,6 @@
 
     <div class="p-12">
         <div class="grid gap-4 justify-center">
-
             @if (count($sub_vote) == 0)
                 <div
                     class="w-[30rem] sm:max-w-sm md:max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">

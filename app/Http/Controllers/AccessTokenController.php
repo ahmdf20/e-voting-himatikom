@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\AccessToken;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Nette\Utils\Random;
 
 class AccessTokenController extends Controller
@@ -11,7 +12,7 @@ class AccessTokenController extends Controller
     public function index()
     {
         return view('token.index', [
-            'tokens' => AccessToken::paginate(10)
+            'tokens' => AccessToken::all()
         ]);
     }
 
@@ -29,5 +30,15 @@ class AccessTokenController extends Controller
             $start++;
         }
         return response()->json(['message' => "Berhasil generate token sebanyak $limit"]);
+    }
+
+    public function delete($id)
+    {
+        DB::table('access_tokens')->delete($id);
+        $data = [
+            'message' => 'Berhasil menghapus token',
+            'icon' => 'success',
+        ];
+        return response()->json($data);
     }
 }

@@ -15,7 +15,7 @@
                 <div
                     class="max-h-sm max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                     <a href="">
-                        <div class="flex justify-evenly gap-3 p-3">
+                        <div class="flex flex-wrap justify-evenly gap-3 p-3">
                             <img class="rounded-lg object-cover h-[15rem] w-[10rem] border-black border-[1px]"
                                 src="{{ asset('storage/' . $candidate->foto_kahim) }}" alt="{{ $candidate->nama_kahim }}"
                                 title="{{ $candidate->nama_kahim }}" />

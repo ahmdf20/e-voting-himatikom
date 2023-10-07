@@ -10,37 +10,49 @@
     </x-slot>
 
     <div class="p-12">
-        <div class="flex flex-wrap gap-4 justify-center">
 
+        <div class="flex flex-wrap mb-[4rem] justify-evenly text-2xl">
+            <h4>Total anggota yang belum memilih : {{ $token_unused }}</h4>
+            <h4>Total anggota yang telah memilih : {{ $token_used }}</h4>
+        </div>
+
+        <div class="flex flex-wrap gap-4 justify-center">
             @foreach ($vote->subvote as $key => $sb)
                 <div
-                    class="w-[30rem] sm:max-w-sm md:max-w-md bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    class="w-[30rem] sm:max-w-sm md:max-w-md bg-white border rounded-lg shadow-xl dark:bg-gray-800 dark:border-gray-700">
                     <a href="">
-                        <h3 class="text-3xl text-center font-bold tracking-tight text-gray-900 dark:text-white my-3">
-                            Pasangan Calon No {{ $key + 1 }}</h3>
+                        <h3 class="text-3xl text-center font-bold tracking-tight text-gray-900 dark:text-white my-4">
+                            Pasangan Calon No. {{ $key + 1 }}</h3>
                         <div class="flex flex-wrap justify-evenly gap-3 p-3">
-                            <img class="rounded-lg object-cover h-[15rem] w-[10rem] border-black border-[1px]"
+                            <img class="rounded-lg object-cover h-[15rem] w-[10rem]"
                                 src="{{ asset('storage/' . $sb->candidate->foto_kahim) }}"
                                 alt="{{ $sb->candidate->nama_kahim }}" title="{{ $sb->candidate->nama_kahim }}" />
-                            <img class="rounded-lg object-cover h-[15rem] w-[10rem] border-black border-[1px]"
+                            <img class="rounded-lg object-cover h-[15rem] w-[10rem]"
                                 src="{{ asset('storage/' . $sb->candidate->foto_wakahim) }}"
                                 alt="{{ $sb->candidate->nama_wakahim }}" title="{{ $sb->candidate->nama_wakahim }}" />
                         </div>
                     </a>
                     <div class="p-5">
                         <a href="#">
-                            <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-6">
-                                {{ $sb->candidate->nama_kahim }} & {{ $sb->candidate->nama_wakahim }}</h5>
+                            <div class="text-center mb-6">
+                                <h5 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
+                                    {{ $sb->candidate->nama_kahim }}</h5>
+                                <h5 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
+                                    &</h5>
+                                <h5 class="text-xl font-bold tracking-tight text-gray-900 dark:text-white mb-3">
+                                    {{ $sb->candidate->nama_wakahim }}</h5>
+                            </div>
+
                         </a>
-                        <h4
-                            class="text-xl text-center underline font-bold tracking-tight text-gray-900 dark:text-white mb-6">
-                            Total Suara</h4>
-                        <h4 class="text-center text-xl font-bold">{{ $sb->score }}</h4>
+                        <div class="text-center my-3">
+                            <h4 class="text-2xl font-extrabold tracking-tight text-gray-900 dark:text-white mb-3">
+                                Total Suara : </h4>
+                            <h4 class="text-6xl font-extrabold">{{ $sb->score }}</h4>
+                        </div>
 
                     </div>
                 </div>
             @endforeach
-
         </div>
     </div>
 

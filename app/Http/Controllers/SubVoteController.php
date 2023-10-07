@@ -36,6 +36,7 @@ class SubVoteController extends Controller
                     'score' => $c->score + 1
                 ]);
         }
+        session()->flush();
         return response()->json(['message' => 'Terimakasih telah memilih! #YUJANGANGOLPUT']);
     }
 }

@@ -66,6 +66,7 @@ Route::controller(CandidatesController::class)->group(function () {
 
 Route::controller(AccessTokenController::class)->group(function () {
     Route::get('/access-token', 'index')->name('access-token');
+    Route::get('/access-token/delete/{tokens}', 'delete')->name('access-token.delete');
 
     Route::post('/access-token/store', 'store')->name('access-token.store');
 });
