@@ -24,8 +24,14 @@
                 </div>
 
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('voting')" :active="request()->routeIs('voting')">
+                    <x-nav-link :href="route('votes')" :active="request()->routeIs('votes')">
                         Vote
+                    </x-nav-link>
+                </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('access-token')" :active="request()->routeIs('access-token')">
+                        Access Token
                     </x-nav-link>
                 </div>
             </div>
@@ -99,8 +105,14 @@
         </div>
 
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('voting')" :active="request()->routeIs('voting')">
+            <x-responsive-nav-link :href="route('votes')" :active="request()->routeIs('votes')">
                 Vote
+            </x-responsive-nav-link>
+        </div>
+
+        <div class="pt-2 pb-3 space-y-1">
+            <x-responsive-nav-link :href="route('access-token')" :active="request()->routeIs('access-token')">
+                Access Token
             </x-responsive-nav-link>
         </div>
 

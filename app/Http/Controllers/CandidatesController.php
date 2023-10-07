@@ -35,6 +35,20 @@ class CandidatesController extends Controller
         return view('candidates.candidates-add');
     }
 
+    public function getCandidate(Candidates $candidates)
+    {
+        $data = [
+            'nama_kahim' => $candidates->nama_kahim,
+            'nim_kahim' => $candidates->nim_kahim,
+            'nama_wakahim' => $candidates->nama_wakahim,
+            'nim_wakahim' => $candidates->nim_wakahim,
+            'visi' => $candidates->vision->visi,
+            'misi' => $candidates->vision->misi
+        ];
+
+        return response()->json($data);
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -84,7 +98,7 @@ class CandidatesController extends Controller
             'icon' => 'success',
         ];
 
-        return to_route('voting')->with($message);
+        return to_route('candidates')->with($message);
     }
 
     public function delete(Candidates $candidates)
@@ -95,6 +109,12 @@ class CandidatesController extends Controller
             'body' => 'Berhasil menghapus data!',
             'icon' => 'success'
         ];
+        return response()->json($data);
+    }
+
+    public function getAllCandidates()
+    {
+        $data = Candidates::all();
         return response()->json($data);
     }
 }

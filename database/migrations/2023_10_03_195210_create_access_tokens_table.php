@@ -13,11 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('votes', function (Blueprint $table) {
+        Schema::create('access_tokens', function (Blueprint $table) {
             $table->id();
-            $table->string('event_name');
-            $table->date('voting_date');
-            $table->integer('candidate_win')->nullable();
+            $table->string('token');
+            $table->integer('is_used')->default(0);
+            $table->timestamps();
         });
     }
 
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('votes');
+        Schema::dropIfExists('access_tokens');
     }
 };

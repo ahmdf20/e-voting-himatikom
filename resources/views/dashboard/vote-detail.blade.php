@@ -4,36 +4,43 @@
     </x-slot>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Voting') }}
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight text-center">
+            {{ $vote->event_name }}
         </h2>
     </x-slot>
 
     <div class="p-12">
-        <div class="grid gap-4 justify-center">
+        <div class="flex flex-wrap gap-4 justify-center">
 
-            @foreach ($votes as $key => $vote)
+            @foreach ($vote->subvote as $key => $sb)
                 <div
-                    class="w-[30rem] sm:max-w-sm md:max-w-md p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                    <a href="#">
-                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                            {{ $vote->event_name }}</h5>
+                    class="w-[30rem] sm:max-w-sm md:max-w-md bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                    <a href="">
+                        <h3 class="text-3xl text-center font-bold tracking-tight text-gray-900 dark:text-white my-3">
+                            Pasangan Calon No {{ $key + 1 }}</h3>
+                        <div class="flex flex-wrap justify-evenly gap-3 p-3">
+                            <img class="rounded-lg object-cover h-[15rem] w-[10rem] border-black border-[1px]"
+                                src="{{ asset('storage/' . $sb->candidate->foto_kahim) }}"
+                                alt="{{ $sb->candidate->nama_kahim }}" title="{{ $sb->candidate->nama_kahim }}" />
+                            <img class="rounded-lg object-cover h-[15rem] w-[10rem] border-black border-[1px]"
+                                src="{{ asset('storage/' . $sb->candidate->foto_wakahim) }}"
+                                alt="{{ $sb->candidate->nama_wakahim }}" title="{{ $sb->candidate->nama_wakahim }}" />
+                        </div>
                     </a>
-                    <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Dibuat pada {{ $vote->voting_date }}</p>
-                    <a href="{{ route('votes.show', ['votes' => $vote->id]) }}"
-                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        Detail
-                        <i class="fa-solid fa-arrow-right pl-2"></i>
-                    </a>
+                    <div class="p-5">
+                        <a href="#">
+                            <h5 class="text-2xl font-bold tracking-tight text-gray-900 dark:text-white mb-6">
+                                {{ $sb->candidate->nama_kahim }} & {{ $sb->candidate->nama_wakahim }}</h5>
+                        </a>
+                        <h4
+                            class="text-xl text-center underline font-bold tracking-tight text-gray-900 dark:text-white mb-6">
+                            Total Suara</h4>
+                        <h4 class="text-center text-xl font-bold">{{ $sb->score }}</h4>
+
+                    </div>
                 </div>
             @endforeach
 
-            <div
-                class="grid mx-auto max-w-sm max-h-sm bg-white border border-slate-400 rounded-lg shadow dark:bg-gray-800 content-center p-5 border-dashed">
-                <button class="p-5 dark:text-white text-black rounded-md" onclick="handleAdd()">
-                    <i class="fa-solid fa-plus"></i>
-                </button>
-            </div>
         </div>
     </div>
 
@@ -46,7 +53,28 @@
                     text: `{{ Session::get('body') }}`,
                 })
             }
+            load()
         })
+
+        // Load Candidates
+        function load() {
+            let html
+            $.ajax({
+                url: `/candidates/getall`,
+                method: "GET",
+                success: function(result) {
+                    console.log(result)
+                    result.forEach((res, index) => {
+                        html +=
+                            `<option value="${res.id}">${res.nama_kahim} & ${res.nama_wakahim}</option>`
+                    });
+                    $('#add-sub-vote').html(html)
+                },
+                error: function(err) {
+                    console.log(err)
+                }
+            })
+        }
 
         function handleAdd() {
             Swal.fire({
